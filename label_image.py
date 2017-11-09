@@ -121,15 +121,15 @@ if __name__ == "__main__":
 
     input_name = "import/" + input_layer
     output_name = "import/" + output_layer
-    input_operation = graph.get_operation_by_name(input_name)
-    output_operation = graph.get_operation_by_name(output_name)
+    input_operation = graph.get_tensor_by_name(input_name)
+    output_operation = graph.get_tensor_by_name(output_name)
 
     with tf.Session(graph=graph) as sess:
-        results = sess.run(output_operation.outputs[0],
-                           {input_operation.outputs[0]: t})
+        results = sess.run(output_operation,
+                           {input_name: t})
     results = np.squeeze(results)
 
-    top_k = results.argsort()[-5:][::-1]
+    top_k = results.argsort()[-3:][::-1]
     labels = load_labels(label_file)
     for i in top_k:
         print(labels[i], results[i])
