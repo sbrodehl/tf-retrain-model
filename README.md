@@ -4,7 +4,7 @@ The full, detailed version of the tutorial(s) can be found on the [TensorFlow](h
 - [image retraining](https://www.tensorflow.org/tutorials/image_retraining)
 - [image recognition](https://www.tensorflow.org/tutorials/image_recognition)
 
-## Prerequeries
+## Prerequisites
 
 We will use the flower dataset to retrain the final layer of the inception model.
 The dataset can be downloaded [here](http://download.tensorflow.org/example_images/flower_photos.tgz).
