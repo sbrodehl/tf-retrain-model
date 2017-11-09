@@ -1,4 +1,4 @@
-# Retrain Pretrained Model for New Categories
+# Retrain a Pretrained Model for New Categories
 
 The full, detailed version of the tutorial(s) can be found on the tensorflow website
 - [image retraining](https://www.tensorflow.org/tutorials/image_retraining)
