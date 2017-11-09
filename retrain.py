@@ -1100,8 +1100,7 @@ def main(_):
             # Store intermediate results
             intermediate_frequency = FLAGS.intermediate_store_frequency
 
-            if (intermediate_frequency > 0 and (i % intermediate_frequency == 0)
-                and i > 0):
+            if intermediate_frequency > 0 and (i % intermediate_frequency == 0) and i > 0:
                 intermediate_file_name = (FLAGS.intermediate_output_graphs_dir +
                                           'intermediate_' + str(i) + '.pb')
                 tf.logging.info('Save intermediate result to : ' +
