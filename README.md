@@ -1,6 +1,6 @@
 # Retrain a Pretrained Model for New Categories
 
-The full, detailed version of the tutorial(s) can be found on the tensorflow website
+The full, detailed version of the tutorial(s) can be found on the [TensorFlow](https://www.tensorflow.org) website
 - [image retraining](https://www.tensorflow.org/tutorials/image_retraining)
 - [image recognition](https://www.tensorflow.org/tutorials/image_recognition)
 
@@ -33,11 +33,11 @@ This will train for a fixed amount of steps. The progress can be seen in tensorb
 tensorboard --logdir=/tmp/retrain_logs
 ```
 
-Visit the [local tensorboard website](http://localhost:6006/) to see pretty things like accuracy or cross entropy.
+Visit the [local tensorboard website](http://localhost:6006/) to see pretty things like accuracy or cross entropy graphs.
 
 ## Inference
 
-Once the retraining of the final layers is done one can use the model to do inference, that is, predict the class for unseen data.
+Once the retraining of the final layer(s) is done one can use the model to do inference, that is, predict the class for unseen data.
 Inference is run on a single image (`.png`/`.jpg`/`.bmp`/`.gif`).
 
 ```bash
