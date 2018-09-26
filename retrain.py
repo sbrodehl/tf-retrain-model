@@ -1115,8 +1115,8 @@ def main(_):
                 FLAGS.bottleneck_dir, FLAGS.image_dir, jpeg_data_tensor,
                 decoded_image_tensor, resized_image_tensor, bottleneck_tensor,
                 FLAGS.architecture))
-        test_accuracy, predictions = sess.run(
-            [evaluation_step, prediction],
+        test_accuracy, predictions, predict_probas = sess.run(
+            [evaluation_step, prediction, final_tensor],
             feed_dict={bottleneck_input: test_bottlenecks,
                        ground_truth_input: test_ground_truth})
         tf.logging.info('Final test accuracy = %.1f%% (N=%d)' %
