@@ -1038,7 +1038,7 @@ def main(_):
                                              sess.graph)
 
         validation_writer = tf.summary.FileWriter(
-            FLAGS.summaries_dir + '/validation')
+            FLAGS.summaries_dir + '/test')
 
         # Set up all our weights to their initial default values.
         init = tf.global_variables_initializer()
@@ -1093,7 +1093,7 @@ def main(_):
                     feed_dict={bottleneck_input: validation_bottlenecks,
                                ground_truth_input: validation_ground_truth})
                 validation_writer.add_summary(validation_summary, i)
-                tf.logging.info('%s: Step %d: Validation accuracy = %.1f%% (N=%d)' %
+                tf.logging.info('%s: Step %d: Test accuracy = %.1f%% (N=%d)' %
                                 (datetime.now(), i, validation_accuracy * 100,
                                  len(validation_bottlenecks)))
 
@@ -1119,7 +1119,7 @@ def main(_):
             [evaluation_step, prediction, final_tensor],
             feed_dict={bottleneck_input: test_bottlenecks,
                        ground_truth_input: test_ground_truth})
-        tf.logging.info('Final test accuracy = %.1f%% (N=%d)' %
+        tf.logging.info('Final validation accuracy = %.1f%% (N=%d)' %
                         (test_accuracy * 100, len(test_bottlenecks)))
 
         if FLAGS.print_misclassified_test_images:
