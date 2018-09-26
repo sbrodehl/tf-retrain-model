@@ -1130,6 +1130,15 @@ def main(_):
                                     (test_filename,
                                      list(image_lists.keys())[predictions[i]]))
 
+        # Write predictions to file
+        with gfile.FastGFile("/tmp/output_final_validation.csv", 'w') as f:
+            ss = ["\"{}\", \"{}\", \"{}\", \"{}\"".format(
+                "Image", "Ground Truth", "Predicted Class", "Predicted Probability"
+            )]
+            for it in zip(test_filenames, test_ground_truth, predictions, predict_probas):
+                ss.append("\"{}\", {}, {}, {:.2}".format(it[0].replace(FLAGS.image_dir, ""), it[1].argmax(), it[2], it[3][it[2]]))
+            f.write('\n'.join(ss) + '\n')
+
         # Write out the trained graph and labels with the weights stored as
         # constants.
         save_graph_to_file(sess, graph, FLAGS.output_graph)
