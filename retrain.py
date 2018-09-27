@@ -121,7 +121,7 @@ FLAGS = None
 MAX_NUM_IMAGES_PER_CLASS = 2 ** 27 - 1  # ~134M
 
 
-def create_image_lists(image_dir, testing_percentage, validation_percentage):
+def create_image_lists(image_dir, testing_percentage, validation_percentage, testing_dir=None):
     """Builds a list of training images from the file system.
 
     Analyzes the sub folders in the image directory, splits them into stable
@@ -192,7 +192,7 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
                                (100.0 / MAX_NUM_IMAGES_PER_CLASS))
             if percentage_hash < validation_percentage:
                 validation_images.append(base_name)
-            elif percentage_hash < (testing_percentage + validation_percentage):
+            elif percentage_hash < (testing_percentage + validation_percentage) and testing_dir is None:
                 testing_images.append(base_name)
             else:
                 training_images.append(base_name)
@@ -202,6 +202,27 @@ def create_image_lists(image_dir, testing_percentage, validation_percentage):
             'testing': testing_images,
             'validation': validation_images,
         }
+    # Check if a separate testing dir is given
+    if testing_dir is not None:
+        test_sub_dirs = [x[0] for x in gfile.Walk(testing_dir)][1:]
+        if set([os.path.basename(dd) for dd in test_sub_dirs]) != set([os.path.basename(dd) for dd in sub_dirs[1:]]):
+            tf.logging.error('Classes found in testing directory do not match training classes.')
+            raise RuntimeError("Classes found in testing directory do not match training classes.")
+        for test_sub_dir in test_sub_dirs:
+            extensions = ['jpg', 'jpeg', 'JPG', 'JPEG']
+            file_list = []
+            dir_name = os.path.basename(test_sub_dir)
+            if dir_name == testing_dir:
+                continue
+            tf.logging.info("Looking for testing images in '" + dir_name + "'")
+            for extension in extensions:
+                file_glob = os.path.join(testing_dir, dir_name, '*.' + extension)
+                file_list.extend(gfile.Glob(file_glob))
+            if not file_list:
+                tf.logging.warning('No files found')
+                continue
+            label_name = re.sub(r'[^a-z0-9]+', ' ', dir_name.lower())
+            result[label_name]['testing'] = [os.path.basename(file_name) for file_name in file_list]
     return result
 
 
@@ -983,7 +1004,7 @@ def main(_):
 
     # Look at the folder structure, and create lists of all the images.
     image_lists = create_image_lists(FLAGS.image_dir, FLAGS.testing_percentage,
-                                     FLAGS.validation_percentage)
+                                     FLAGS.validation_percentage, FLAGS.testing_dir)
     class_count = len(image_lists.keys())
     if class_count == 0:
         tf.logging.error('No valid folders of images found at ' + FLAGS.image_dir)
@@ -1112,7 +1133,7 @@ def main(_):
         test_bottlenecks, test_ground_truth, test_filenames = (
             get_random_cached_bottlenecks(
                 sess, image_lists, FLAGS.test_batch_size, 'testing',
-                FLAGS.bottleneck_dir, FLAGS.image_dir, jpeg_data_tensor,
+                FLAGS.bottleneck_dir, FLAGS.image_dir if FLAGS.testing_dir is None else FLAGS.testing_dir, jpeg_data_tensor,
                 decoded_image_tensor, resized_image_tensor, bottleneck_tensor,
                 FLAGS.architecture))
         test_accuracy, predictions, predict_probas = sess.run(
@@ -1204,6 +1225,12 @@ if __name__ == '__main__':
         type=int,
         default=10,
         help='What percentage of images to use as a test set.'
+    )
+    parser.add_argument(
+        '--testing_dir',
+        type=str,
+        default=None,
+        help='Path to folders of labeled images used for testing (only once).'
     )
     parser.add_argument(
         '--validation_percentage',
