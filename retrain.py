@@ -1157,7 +1157,7 @@ def main(_):
                 "Image", "Ground Truth", "Predicted Class", "Predicted Probability"
             )]
             for it in zip(test_filenames, test_ground_truth, predictions, predict_probas):
-                ss.append("\"{}\", {}, {}, {:.2}".format(it[0].replace(FLAGS.image_dir, ""), it[1].argmax(), it[2], it[3][it[2]]))
+                ss.append("\"{}\", {}, {}, {:.2}".format(it[0].replace(FLAGS.image_dir if FLAGS.testing_dir is None else FLAGS.testing_dir, ""), it[1].argmax(), it[2], it[3][it[2]]))
             f.write('\n'.join(ss) + '\n')
 
         # Write out the trained graph and labels with the weights stored as
