@@ -1247,7 +1247,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--train_batch_size',
         type=int,
-        default=100,
+        default=32,
         help='How many images to train on at a time.'
     )
     parser.add_argument(
@@ -1264,7 +1264,7 @@ if __name__ == '__main__':
     parser.add_argument(
         '--validation_batch_size',
         type=int,
-        default=100,
+        default=8,
         help="""\
       How many images to use in an evaluation batch. This validation set is
       used much more often than the test set, and is an early indicator of how
